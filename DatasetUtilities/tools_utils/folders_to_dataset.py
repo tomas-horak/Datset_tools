@@ -39,15 +39,16 @@ class ImageFoldersToDataset:
 
     def create_one_hot_encoded(self, data):
         df = pd.DataFrame(data)
+        """
         # get_dummies creates one hot encoded
         one_hot_encoded = pd.get_dummies(df, columns=["categories"])
         # Convert only the one-hot encoded columns to integers
         columns_to_convert = one_hot_encoded.columns.difference(["filename"])
         one_hot_encoded[columns_to_convert] = one_hot_encoded[columns_to_convert].astype(int)
-
+        """
         output_file = "classes.csv"
         csv_path = os.path.join(self.output_path, output_file)
-        one_hot_encoded.to_csv(csv_path, index=False)
+        df.to_csv(csv_path, index=False)
 
     def process(self):
         print("creating target folder")

@@ -37,7 +37,7 @@ class RemoveDuplicates:
                 src_path = os.path.join(self.folder2, self.second_file[index])
                 shutil.copy(src_path, "./output")
 
-    def run(self):
+    def process(self):
         self.calculate_hashes()
         self.deduplicate()
 
