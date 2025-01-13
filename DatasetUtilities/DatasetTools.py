@@ -2,6 +2,8 @@ from DatasetUtilities.tools_utils.dataset_distribution_tool import show_distribu
 from DatasetUtilities.tools_utils.decomposer import Decomposer
 from DatasetUtilities.tools_utils.folders_to_dataset import ImageFoldersToDataset
 from DatasetUtilities.tools_utils.resizer import ImageResizer
+import h5py
+import numpy as np
 
 
 class DatasetTools:
@@ -40,14 +42,13 @@ class DatasetTools:
 
     @staticmethod
     def labels_to_numbers(csv_file_path, output_file, output_docs):
+
         import pandas as pd
-        # Read the CSV file
         df = pd.read_csv(csv_file_path, delimiter=';')
         print(df.columns)
 
         categories = sorted(df['categories'].unique())
 
-        # Map categories to numbers
         category_to_number = {category: index for index, category in enumerate(categories)}
 
         # Convert categories to numerical labels
@@ -65,7 +66,16 @@ class DatasetTools:
         with open(output_docs, 'w') as doc_file:
             doc_file.write(explanation)
 
-        print("Conversion completed successfully!")
+
+
+    @staticmethod
+    def create_hdf5_dataset(tf_dataset, hdf5_path):
+        print("TODO")
+
+    def rename_images_in_folder(self):
+        print("TODO")
+
+
 
 
 

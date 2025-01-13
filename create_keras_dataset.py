@@ -7,7 +7,6 @@ from tensorflow.python.keras import layers
 
 
 directory = "/Users/tomashorak/PycharmProjects/ML_dataset_parser/resized"
-
 df = pd.read_csv("/Users/tomashorak/PycharmProjects/ML_dataset_parser/encoded.csv")
 
 file_paths = df["filename"].values
