@@ -9,7 +9,6 @@ import h5py
 import numpy as np
 from pathlib import Path
 
-
 class DatasetTools:
     logger = logging.getLogger(__name__)
     logging.basicConfig(level=logging.INFO)
@@ -47,17 +46,18 @@ class DatasetTools:
             DatasetTools.logger.error(f"Error decomposing dataset: {e}")
 
     @staticmethod
-    def create_dataset_from_folders(path_to_directory, output_path):
+    def create_dataset_from_folders(path_to_directory, output_path, dataset_type):
         """
         This utility is used for creating dataset from directory of folders.
 
         :param path_to_directory: path to folder with folders corresponding to classes
         :param output_path: directory, where dataset should be created
+        :param dataset_type:
         """
         if not os.path.exists(path_to_directory):
             raise ValueError(f"Input directory {path_to_directory} does not exist.")
 
-        dataset_creator = ImageFoldersToDataset(path_to_folder_with_folders= path_to_directory, output_path= output_path)
+        dataset_creator = ImageFoldersToDataset(path_to_folder_with_folders= path_to_directory, output_path= output_path, dataset_type=dataset_type)
         dataset_creator.process()
 
     @staticmethod
@@ -98,8 +98,6 @@ class DatasetTools:
         # Save the explanation to the output document
         with open(output_docs, 'w') as doc_file:
             doc_file.write(explanation)
-
-
 
     @staticmethod
     def create_hdf5_dataset(tf_dataset, hdf5_path):

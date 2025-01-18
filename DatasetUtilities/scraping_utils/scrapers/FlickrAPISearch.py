@@ -1,4 +1,7 @@
+from urllib.parse import unquote
+
 import requests
+import logging
 
 from DatasetUtilities.scraping_utils.scrapers.AbstractScraper import AbstractScraper
 
@@ -12,10 +15,13 @@ class FlickrImageExtractor(AbstractScraper):
     def scrape_images(query, api_key=None, count=100):
         """
         :param query: search query
-        :param api_key: Flickr api key
+        :param api_key: Flickr API key
         :param count: number of results, max 500
         :return: list of found URLs
         """
+        query = unquote(query)
+
+
         api_endpoint = 'https://api.flickr.com/services/rest/'
         request_params = {
             'method': 'flickr.photos.search',
@@ -26,21 +32,48 @@ class FlickrImageExtractor(AbstractScraper):
             'per_page': count,
         }
 
-        response = requests.get(api_endpoint, params=request_params)
-        data = response.json()
+        try:
+            response = requests.get(api_endpoint, params=request_params)
+            response.raise_for_status()  # Raise HTTPError for bad responses (4xx, 5xx)
 
-        if data is None:
-            print("Flickr response is empty")
+        except requests.exceptions.RequestException as e:
+            # Catch network-related errors (timeouts, DNS errors, etc.)
+            logging.error(f"Network error while calling Flickr API: {e}")
             return []
 
-        photos = data.get('photos', {}).get('photo', [])
+        try:
+            data = response.json()
+            print(data)
+        except ValueError as e:
+            # Handle errors in JSON decoding (invalid JSON response)
+            logging.error(f"Error parsing the JSON response from Flickr: {e}")
+            return []
+
+        if data is None or 'photos' not in data or 'photo' not in data['photos']:
+            logging.warning("Flickr response is empty or malformed")
+            return []
+
+        photos = data['photos']['photo']
+        if not photos:
+            logging.info(f"No photos found for query: {query}")
+            return []
+
         urls = []
         for photo in photos:
-            server_id = photo['server']
-            photo_id = photo['id']
-            secret = photo['secret']
-            size = 'z'
-            url = f"https://live.staticflickr.com/{server_id}/{photo_id}_{secret}_{size}.jpg"
-            urls.append(url)
-        return urls
+            try:
+                # Extract necessary information from the photo data
+                server_id = photo['server']
+                photo_id = photo['id']
+                secret = photo['secret']
+                size = 'z'  # Using 'z' size for medium resolution
 
+                # Construct the image URL
+                url = f"https://live.staticflickr.com/{server_id}/{photo_id}_{secret}_{size}.jpg"
+                urls.append(url)
+
+            except KeyError as e:
+                # Handle missing expected keys in the response data
+                logging.warning(f"Missing expected data in Flickr response: {e}")
+                continue
+
+        return urls

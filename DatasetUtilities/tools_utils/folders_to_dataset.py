@@ -4,9 +4,10 @@ import pandas as pd
 
 
 class ImageFoldersToDataset:
-    def __init__(self, path_to_folder_with_folders, output_path):
+    def __init__(self, path_to_folder_with_folders, output_path, dataset_type):
         self.input_folder_path = path_to_folder_with_folders
         self.output_path = output_path
+        self.dataset_type = dataset_type
 
     def create_target_folder(self):
         try:
@@ -51,6 +52,7 @@ class ImageFoldersToDataset:
         df.to_csv(csv_path, index=False)
 
     def process(self):
+
         print("creating target folder")
         self.create_target_folder()
         print("converting data")
