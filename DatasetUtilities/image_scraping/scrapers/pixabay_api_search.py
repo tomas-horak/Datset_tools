@@ -2,7 +2,7 @@ import logging
 from urllib.parse import unquote
 
 import requests
-from DatasetUtilities.scraping_utils.scrapers.AbstractScraper import AbstractScraper
+from DatasetUtilities.image_scraping.scrapers.abstract_scraper import AbstractScraper
 
 
 class PixabayImageExtractor(AbstractScraper):
@@ -21,14 +21,13 @@ class PixabayImageExtractor(AbstractScraper):
         API_ENDPOINT = 'https://pixabay.com/api/'
         collected_images = []
         page = 1  # Start with the first page
-        query = unquote(query)
-        formatted_query = query.strip().replace(" ", "+") #!!! different than URL formatting
+        query = query.strip().replace(" ", "+") #!!! different than URL formatting
 
         while len(collected_images) < count:
 
             params = {
                 'key': api_key,
-                'q': formatted_query,
+                'q': query,
                 'image_type': 'photo',
                 'page': page,
             }

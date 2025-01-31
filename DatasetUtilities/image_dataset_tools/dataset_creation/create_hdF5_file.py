@@ -64,6 +64,6 @@ def create_hdf5_dataset_from_files(image_directory, csv_path, hdf5_path, target_
 
 # Example usage
 image_directory = "/Users/tomashorak/PycharmProjects/ML_dataset_parser/resized 2"
-csv_path = "/Users/tomashorak/PycharmProjects/ML_dataset_parser/encoded.csv"
+csv_path = "/encoded.csv"
 hdf5_path = "/Users/tomashorak/PycharmProjects/ML_dataset_parser/output_dataset.h5"
 create_hdf5_dataset_from_files(image_directory, csv_path, hdf5_path)

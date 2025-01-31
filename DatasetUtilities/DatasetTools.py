@@ -1,13 +1,16 @@
 import logging
 import os
 
-from DatasetUtilities.tools_utils.dataset_distribution_tool import show_distribution_from_csv
-from DatasetUtilities.tools_utils.decomposer import Decomposer
-from DatasetUtilities.tools_utils.folders_to_dataset import ImageFoldersToDataset
-from DatasetUtilities.tools_utils.resizer import ImageResizer
+
 import h5py
 import numpy as np
 from pathlib import Path
+
+from DatasetUtilities.image_dataset_tools.dataset_creation.folders_to_dataset import ImageFoldersToDataset
+from DatasetUtilities.image_dataset_tools.dataset_creation.resizer import ImageResizer
+from DatasetUtilities.image_dataset_tools.dataset_decomposition.decomposer import Decomposer
+from DatasetUtilities.image_dataset_tools.dataset_distribution_tool import show_distribution_from_csv
+
 
 class DatasetTools:
     logger = logging.getLogger(__name__)

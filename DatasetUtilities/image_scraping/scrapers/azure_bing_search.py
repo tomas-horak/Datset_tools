@@ -1,5 +1,6 @@
 import requests
-from DatasetUtilities.scraping_utils.scrapers.AbstractScraper import AbstractScraper
+
+from DatasetUtilities.image_scraping.scrapers.abstract_scraper import AbstractScraper
 
 
 class AzureBingSearch(AbstractScraper):

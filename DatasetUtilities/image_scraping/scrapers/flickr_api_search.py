@@ -3,7 +3,8 @@ from urllib.parse import unquote
 import requests
 import logging
 
-from DatasetUtilities.scraping_utils.scrapers.AbstractScraper import AbstractScraper
+from DatasetUtilities.image_scraping.scrapers.abstract_scraper import AbstractScraper
+
 
 
 class FlickrImageExtractor(AbstractScraper):
@@ -19,7 +20,6 @@ class FlickrImageExtractor(AbstractScraper):
         :param count: number of results, max 500
         :return: list of found URLs
         """
-        query = unquote(query)
 
 
         api_endpoint = 'https://api.flickr.com/services/rest/'
@@ -43,7 +43,6 @@ class FlickrImageExtractor(AbstractScraper):
 
         try:
             data = response.json()
-            print(data)
         except ValueError as e:
             # Handle errors in JSON decoding (invalid JSON response)
             logging.error(f"Error parsing the JSON response from Flickr: {e}")

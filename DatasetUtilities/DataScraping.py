@@ -1,7 +1,8 @@
 import os
 from dotenv import load_dotenv
-from DatasetUtilities.scraping_utils.scraper_builder import ScraperBuilder
-from DatasetUtilities.scraping_utils.image_downloader import ImageDownloader
+
+from DatasetUtilities.image_scraping.image_downloader import ImageDownloader
+from DatasetUtilities.image_scraping.scraper_builder import ScraperBuilder
 
 
 class DataScraper:
