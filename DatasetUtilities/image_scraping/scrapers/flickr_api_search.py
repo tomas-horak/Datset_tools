@@ -6,21 +6,18 @@ import logging
 from DatasetUtilities.image_scraping.scrapers.abstract_scraper import AbstractScraper
 
 
-
 class FlickrImageExtractor(AbstractScraper):
     """
     https://www.flickr.com/services/api/flickr.photos.search.html
     """
 
-    @staticmethod
-    def scrape_images(query, api_key=None, count=100):
+    def scrape_images(self, query, api_key=None, count=100):
         """
         :param query: search query
         :param api_key: Flickr API key
         :param count: number of results, max 500
         :return: list of found URLs
         """
-
 
         api_endpoint = 'https://api.flickr.com/services/rest/'
         request_params = {
@@ -41,12 +38,9 @@ class FlickrImageExtractor(AbstractScraper):
             logging.error(f"Network error while calling Flickr API: {e}")
             return []
 
-        try:
-            data = response.json()
-        except ValueError as e:
-            # Handle errors in JSON decoding (invalid JSON response)
-            logging.error(f"Error parsing the JSON response from Flickr: {e}")
-            return []
+        data = self.parse_json_response(response)
+
+        #data = AbstractScraper.parse_json_response(response)
 
         if data is None or 'photos' not in data or 'photo' not in data['photos']:
             logging.warning("Flickr response is empty or malformed")

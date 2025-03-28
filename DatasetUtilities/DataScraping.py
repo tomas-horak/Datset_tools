@@ -3,11 +3,12 @@ from dotenv import load_dotenv
 
 from DatasetUtilities.image_scraping.image_downloader import ImageDownloader
 from DatasetUtilities.image_scraping.scraper_builder import ScraperBuilder
+from DatasetUtilities.image_scraping.search_processor import downloader
 
 
 class DataScraper:
 
-    def __init__(self, query, images_per_source, output_folder="./output", use_scrapers=None):
+    def __init__(self, query, images_per_source, output_folder="./default", use_scrapers=None):
         """
         Initializes the DataScraper instance.
 
@@ -73,3 +74,14 @@ class DataScraper:
         builder.process()
 
         print(f"Scraping and downloading for query '{self.query}' completed successfully!")
+
+
+
+downloader = ImageDownloader()
+query = "Květina"
+output = "./output"
+builder = ScraperBuilder(query, downloader, output)
+builder.add_bing_scraper({"api_key": "klíč k API", "count": 10})
+builder.add_pexels_scraper({"api_key": "klíč k API", "count": 10})
+builder.add_flickr_scraper({"api_key": "klíč k API", "count": 10})
+

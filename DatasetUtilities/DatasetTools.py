@@ -1,13 +1,16 @@
 import logging
 import os
 
-
-import h5py
-import numpy as np
 from pathlib import Path
 
+from DatasetUtilities.image_dataset_tools.dataset_creation.convert_images_to_jpg import \
+    NormaliseFileTypeAndNameInDataset
+from DatasetUtilities.image_dataset_tools.dataset_creation.create_tensorflow_dataset import \
+    TensorflowDatasetFromDirectory
 from DatasetUtilities.image_dataset_tools.dataset_creation.folders_to_dataset import ImageFoldersToDataset
 from DatasetUtilities.image_dataset_tools.dataset_creation.resizer import ImageResizer
+from DatasetUtilities.image_dataset_tools.dataset_split.dataset_split_absolute import ImagesFromFolderDatasetAbsolute
+from DatasetUtilities.image_dataset_tools.dataset_split.dataset_split_relative import ImagesFromFolderDataset
 from DatasetUtilities.image_dataset_tools.dataset_decomposition.decomposer import Decomposer
 from DatasetUtilities.image_dataset_tools.dataset_distribution_tool import show_distribution_from_csv
 
@@ -17,7 +20,7 @@ class DatasetTools:
     logging.basicConfig(level=logging.INFO)
 
     @staticmethod
-    def decompose_dataset(path_to_dataset, path_to_csv, csv_column_names, output_dir, one_hot = False):
+    def decompose_dataset(path_to_dataset, output_dir, one_hot = False):
         """
         This utility is used for converting a single file with images and corresponding mapping in csv to a corresponding
         folder structure with images
@@ -35,14 +38,8 @@ class DatasetTools:
         if not os.path.exists(path_to_dataset):
             raise ValueError(f"Input directory {path_to_dataset} does not exist.")
 
-        if Path(path_to_csv).suffix != ".csv":
-            raise TypeError(f"CSV file {path_to_csv} does not exist or is in wrong format.")
-
-        if not os.path.exists(path_to_csv):
-            raise ValueError(f"CSV file {path_to_csv} does not exist.")
-
         try:
-            decomposer = Decomposer(path_to_dataset, path_to_csv, output_dir, csv_column_names, one_hot, logger = DatasetTools.logger)
+            decomposer = Decomposer(path_to_dataset, output_dir, one_hot=one_hot)
             decomposer.process()
             DatasetTools.logger.info("Decomposition completed.")
         except Exception as e:
@@ -68,13 +65,9 @@ class DatasetTools:
         show_distribution_from_csv(csv_path)
 
     @staticmethod
-    def remove_duplicates_in_folder_by_hash():
-        print("todo")
-
-    @staticmethod
-    def resize_images(input_directory, output_directory, dimension):
-        resizer = ImageResizer(input_directory, output_directory, dimension)
-        resizer.process_directory()
+    def resize_images(input_directory, output_directory, dimension, dataset_type):
+        resizer = ImageResizer(input_directory, output_directory, dimension, dataset_type)
+        resizer.process()
 
     @staticmethod
     def labels_to_numbers(csv_file_path, output_file, output_docs):
@@ -91,23 +84,44 @@ class DatasetTools:
         df['numerical_label'] = df['categories'].map(category_to_number)
         df_output = df[['filename', 'numerical_label']]
 
-        # Save the output CSV with the new numerical labels
+        # Save the Dypsis Lutescens houseplant CSV with the new numerical labels
         df_output.to_csv(output_file, index=False)
 
         # Prepare the explanation of the label mapping
         explanation = "\n".join(
             [f"Label {index} = class {category}" for category, index in category_to_number.items()])
 
-        # Save the explanation to the output document
+        # Save the explanation to the Dypsis Lutescens houseplant document
         with open(output_docs, 'w') as doc_file:
             doc_file.write(explanation)
+
+    @staticmethod
+    def split_dataset_relative(input_folder_path, output_test_path, output_train_path=None, data_split=0.2):
+        extractor = ImagesFromFolderDataset(input_folder_path, output_test_path, output_train_path, data_split)
+        extractor.process()
+
+    @staticmethod
+    def split_dataset_absolute(input_folder_path, output_test_path, output_train_path=None, num_val = 100, num_test = 50):
+        extractor = ImagesFromFolderDatasetAbsolute(input_folder_path, output_test_path, output_train_path, num_val, num_test)
+        extractor.process()
+
+    @staticmethod
+    def create_tensorflow_dataset(input_folder_path, output_path, image_size, batch_size):
+        dataset_creator = TensorflowDatasetFromDirectory(input_folder_path, output_path, image_size, batch_size)
+        dataset_creator.create_dataset()
 
     @staticmethod
     def create_hdf5_dataset(tf_dataset, hdf5_path):
         print("TODO")
 
-    def rename_images_in_folder(self):
-        print("TODO")
+    @staticmethod
+    def normalise_images(path_to_dataset, output_path):
+        convertor = NormaliseFileTypeAndNameInDataset(path_to_dataset, output_path)
+        convertor.process()
+
+
+
+
 
 
 

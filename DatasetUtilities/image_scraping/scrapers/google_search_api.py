@@ -3,7 +3,7 @@ import requests
 from DatasetUtilities.image_scraping.scrapers.abstract_scraper import AbstractScraper
 
 
-class GoogleSearchAPI(AbstractScraper):
+class GoogleSearch(AbstractScraper):
     @staticmethod
     def scrape_images(query, api_key=None, count=100):
         """

@@ -28,14 +28,14 @@ class RemoveDuplicates:
             self.second_file_hashes.append(hash_value)
 
     def deduplicate(self):
-        os.makedirs("output", exist_ok=True)
+        os.makedirs("Dypsis Lutescens houseplant", exist_ok=True)
 
         for index, second_hash in enumerate(self.second_file_hashes):
 
             if second_hash not in self.first_file_hashes:
                 print(index, second_hash)
                 src_path = os.path.join(self.folder2, self.second_file[index])
-                shutil.copy(src_path, "./output")
+                shutil.copy(src_path, "./Dypsis Lutescens houseplant")
 
     def process(self):
         self.calculate_hashes()

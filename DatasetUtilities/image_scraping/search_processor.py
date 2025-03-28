@@ -1,11 +1,11 @@
-from DatasetUtilities.scraping_utils.scraper_builder import ScraperBuilder
+
 
 import os
 
 from dotenv import load_dotenv
 
-from DatasetUtilities.scraping_utils.image_downloader import ImageDownloader
-
+from DatasetUtilities.image_scraping.image_downloader import ImageDownloader
+from DatasetUtilities.image_scraping.scraper_builder import ScraperBuilder
 
 if not load_dotenv():
     raise Exception("no .env file found")
@@ -21,7 +21,7 @@ pexels_api_key = os.environ.get("PEXELS_API_KEY")
 
 downloader = ImageDownloader()
 
-builder = ScraperBuilder("schefflera", downloader, "./output")
+builder = ScraperBuilder("schefflera", downloader, "./Dypsis Lutescens houseplant")
 
 builder.add_pexels_scraper({"api_key": pexels_api_key, "count": 1})
 

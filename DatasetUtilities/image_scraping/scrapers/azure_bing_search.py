@@ -6,15 +6,6 @@ from DatasetUtilities.image_scraping.scrapers.abstract_scraper import AbstractSc
 class AzureBingSearch(AbstractScraper):
     @staticmethod
     def scrape_images(query, api_key=None, count=100):
-        """
-        Searches Bing for image thumbnails and returns a list of thumbnail URLs.
-        The key should be obtained through Azure.
-
-        :param query: Search query
-        :param api_key: Bing Search API key.
-        :param count: Number of results to fetch (default is 100).
-        :return: List of thumbnail URLs.
-        """
         url = "https://api.bing.microsoft.com/v7.0/images/search"
         headers = {"Ocp-Apim-Subscription-Key": api_key}
         max_per_request = 150  # Bing API allows up to 150 results per request
@@ -29,7 +20,7 @@ class AzureBingSearch(AbstractScraper):
             }
             try:
                 response = requests.get(url, headers=headers, params=params)
-                response.raise_for_status()  # Raise HTTPError for bad responses
+                response.raise_for_status()
 
                 data = response.json()
                 images = data.get("value", [])

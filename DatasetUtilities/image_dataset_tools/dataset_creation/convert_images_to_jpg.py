@@ -9,6 +9,7 @@ class NormaliseFileTypeAndNameInDataset:
     def __init__(self, input_folder_path, output_folder_path):
         self.input_directory = input_folder_path
         self.output_directory = output_folder_path
+        self.folder_name_mapping = {}
 
     def create_target_folder(self):
         try:
@@ -19,6 +20,8 @@ class NormaliseFileTypeAndNameInDataset:
     def create_class_folders(self):
         folders = os.listdir(self.input_directory)
         for folder in folders:
+            normalized_name = folder.lower().replace(" ", "-")
+            self.folder_name_mapping[folder] = normalized_name
             path = os.path.join(self.output_directory, folder)
             try:
                 os.makedirs(path, exist_ok=True)
@@ -49,14 +52,29 @@ class NormaliseFileTypeAndNameInDataset:
                 rgb_im = image.convert("RGB")
                 rgb_im.save(f"{image_output_path}.jpg")
 
+    def rename_class_folders(self):
+        for original_name, normalized_name in self.folder_name_mapping.items():
+            original_path = os.path.join(self.output_directory, original_name)
+            normalized_path = os.path.join(self.output_directory, normalized_name)
+
+            if os.path.exists(original_path) and original_name != normalized_name:
+                try:
+                    os.rename(original_path, normalized_path)
+                    logging.info(f"Renamed folder {original_name} -> {normalized_name}")
+                except Exception as e:
+                    logging.error(f"Could not rename {original_name} -> {normalized_name}: {e}")
+
     def process(self):
-        logging.info("Creating target file")
+        logging.info("Creating target folder")
         self.create_target_folder()
-        logging.info("Creating class files")
+        logging.info("Creating class folders")
         self.create_class_folders()
-        logging.info("Converting")
+        logging.info("Converting files")
         self.convert()
+        logging.info("Renaming class folders")
+        self.rename_class_folders()
         logging.info("Done")
+
 
 
 

@@ -6,6 +6,7 @@ from tensorflow.python import keras
 from tensorflow.python.keras import layers
 
 
+
 directory = "/Users/tomashorak/PycharmProjects/ML_dataset_parser/resized"
 df = pd.read_csv("/encoded.csv")
 

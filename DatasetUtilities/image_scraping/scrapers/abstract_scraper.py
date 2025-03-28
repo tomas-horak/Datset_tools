@@ -6,10 +6,8 @@ class AbstractScraper(ABC):
     """
     Base class for all scrapers. Provides a common interface and reusable utilities for scraping images.
     """
-
-    @staticmethod
     @abstractmethod
-    def scrape_images(query, api_key=None, count=100) -> list:
+    def scrape_images(self, query, api_key=None, count=100) -> list:
         """
         Abstract method to scrape images.
         :param query: Search query string
@@ -19,8 +17,7 @@ class AbstractScraper(ABC):
         """
         pass
 
-    @staticmethod
-    def validate_response(response):
+    def validate_response(self, response):
         """
         Validates the HTTP response.
         Logs an error for non-200 status codes instead of raising an exception.
@@ -35,8 +32,7 @@ class AbstractScraper(ABC):
             return False
         return True
 
-    @staticmethod
-    def parse_json_response(response):
+    def parse_json_response(self, response):
         """
         Safely parses the JSON response.
         Logs an error if JSON parsing fails.
